@@ -1,5 +1,7 @@
 package com.roche.controller;
 
+import com.roche.controller.dto.ProductDto;
+import com.roche.controller.mapper.ProductDtoToProductMapper;
 import com.roche.domain.Product;
 import com.roche.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,40 +13,45 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController("/products/")
 public class ProductController {
 
+    private ProductDtoToProductMapper productMapper;
     private ProductService service;
 
     @Autowired
-    public ProductController(ProductService service) {
+    public ProductController(ProductDtoToProductMapper productMapper, ProductService service) {
+        this.productMapper = productMapper;
         this.service = service;
     }
 
     @PostMapping
-    public void create(@RequestBody Product product) {
-        this.service.create(product);
+    public void create(@RequestBody ProductDto productDto) {
+        service.create(productMapper.toProduct(productDto));
     }
 
     @PostMapping("{id}")
-    public void update(@RequestBody Product product, @PathVariable("id") String productId) {
-        this.service.update(product);
+    public void update(@RequestBody ProductDto productDto, @PathVariable("id") String productId) {
+        Product product = productMapper.toProduct(productDto);
+        product.setSku(productId);
+        service.update(product);
     }
 
     @GetMapping("{id}")
-    public Product get(String productId) {
-        return this.service.get(productId);
+    public ProductDto get(String productId) {
+        return productMapper.toProductDto(service.get(productId));
     }
 
     @GetMapping
-    public List<Product> getAll() {
-        return this.service.getAll();
+    public List<ProductDto> getAll() {
+        return service.getAll().stream().map(product -> productMapper.toProductDto(product)).collect(Collectors.toList());
     }
 
     @DeleteMapping("{id}")
     public void deleteById(@PathVariable("id") String productId) {
-        this.service.deleteById(productId);
+        service.deleteById(productId);
     }
 
 }

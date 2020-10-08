@@ -1,8 +1,8 @@
 package com.roche.domain;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NonNull;
 
 import javax.persistence.Column;
@@ -12,7 +12,7 @@ import java.time.Instant;
 
 @EqualsAndHashCode
 @Builder
-@Getter
+@Data
 @Entity
 public class Product {
 
