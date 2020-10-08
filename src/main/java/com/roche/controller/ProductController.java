@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequestMapping("/products/")
+@RequestMapping("/products")
 @RestController
 public class ProductController {
 
@@ -39,7 +39,7 @@ public class ProductController {
 
     @ApiOperation(value = "Updates an exiting product", notes = "This endpoint updates the properties of a product in the database. Anything can be " +
             "updated except for the product sku.")
-    @PostMapping("{id}")
+    @PostMapping("/{id}")
     public void update(@RequestBody ProductDto productDto, @ApiParam(name = "id", value = "Id of the product to be updated") @PathVariable("id") String productId) {
         Product product = productMapper.toProduct(productDto);
         product.setSku(productId);
@@ -47,7 +47,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "Retrieves the details of a product", notes = "This endpoint retrieves the details of a product from the database.", response = ProductDto.class)
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ProductDto get(@ApiParam(name = "id", value = "Id of the product to be retrieved") @PathVariable("id") String productId) {
         return productMapper.toProductDto(service.get(productId));
     }
@@ -59,7 +59,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "Deletes a product from the database", notes = "The product is actually not deleted but rather a delete flag is set.")
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deleteById(@ApiParam(name = "id", value = "Id of the product to be deleted") @PathVariable("id") String productId) {
         service.deleteById(productId);
     }
