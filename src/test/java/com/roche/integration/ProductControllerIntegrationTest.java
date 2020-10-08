@@ -1,12 +1,12 @@
 package com.roche.integration;
 
 import com.roche.controller.dto.ProductDto;
-import com.roche.domain.Product;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import static com.roche.TestUtility.mockProductDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ProductControllerIntegrationTest {
 
     @LocalServerPort
@@ -33,7 +33,7 @@ public class ProductControllerIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        this.productsUri = new URL("http://localhost:" + port + "/products").toURI();
+        this.productsUri = new URL("http://localhost:" + port + "/products/").toURI();
     }
 
     @Test
@@ -41,8 +41,8 @@ public class ProductControllerIntegrationTest {
         ProductDto productDto = mockProductDto();
         ResponseEntity<Void> createResponse = template.postForEntity(productsUri, productDto, Void.class);
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        ProductDto createdProduct = template.getForObject(productsUri + "/" + productDto.getId(), ProductDto.class);
-        assertProducts(productDto, createdProduct);
+        ResponseEntity<ProductDto> createdProduct = template.getForEntity(productsUri + productDto.getId(), ProductDto.class);
+        assertProducts(productDto, createdProduct.getBody());
     }
 
     @Test
@@ -52,10 +52,10 @@ public class ProductControllerIntegrationTest {
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         productDto.setName("updatedName-1");
         productDto.setPrice(10d);
-        ResponseEntity<Void> updateResponse = template.postForEntity(productsUri + "/" + productDto.getId(), productDto, Void.class);
+        ResponseEntity<Void> updateResponse = template.postForEntity(productsUri + productDto.getId(), productDto, Void.class);
         assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        ProductDto updatedProduct = template.getForObject(productsUri + "/" + productDto.getId(), ProductDto.class);
-        assertProducts(productDto, updatedProduct);
+        ResponseEntity<ProductDto> updatedProduct = template.getForEntity(productsUri + productDto.getId(), ProductDto.class);
+        assertProducts(productDto, updatedProduct.getBody());
     }
 
     private void assertProducts(ProductDto productDto1, ProductDto productDto2) {

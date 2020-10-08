@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController("/products/")
+@RequestMapping("/products/")
+@RestController
 public class ProductController {
 
     private ProductDtoToProductMapper productMapper;
@@ -40,7 +42,7 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public ProductDto get(String productId) {
+    public ProductDto get(@PathVariable("id") String productId) {
         return productMapper.toProductDto(service.get(productId));
     }
 
@@ -53,5 +55,4 @@ public class ProductController {
     public void deleteById(@PathVariable("id") String productId) {
         service.deleteById(productId);
     }
-
 }
