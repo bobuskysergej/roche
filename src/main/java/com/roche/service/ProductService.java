@@ -27,11 +27,11 @@ public class ProductService {
         repository.save(product);
     }
 
-    public void update(Product product) {
+    public Product update(Product product) {
         if (repository.findBySkuAndDeletedFalse(product.getSku()) == null) {
             throw new EntityNotFoundException("Product with a given id does not exist");
         }
-        repository.save(product);
+        return repository.save(product);
     }
 
     public void delete(Product product) {

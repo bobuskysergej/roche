@@ -62,8 +62,7 @@ public class ProductControllerIntegrationTest {
         template.postForEntity(productsUri, productDto, Void.class);
         productDto.setName("updatedName-1");
         productDto.setPrice(10d);
-        ResponseEntity<Void> updateResponse = template.postForEntity(productsUri + productDto.getId(), productDto, Void.class);
-        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        template.put(productsUri + productDto.getId(), productDto, Void.class);
         ResponseEntity<ProductDto> updatedProduct = template.getForEntity(productsUri + productDto.getId(), ProductDto.class);
         assertProducts(productDto, updatedProduct.getBody());
     }

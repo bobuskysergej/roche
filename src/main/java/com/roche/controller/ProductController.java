@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,11 +40,11 @@ public class ProductController {
 
     @ApiOperation(value = "Updates an exiting product", notes = "This endpoint updates the properties of a product in the database. Anything can be " +
             "updated except for the product sku.")
-    @PostMapping("/{id}")
-    public void update(@RequestBody ProductDto productDto, @ApiParam(name = "id", value = "Id of the product to be updated") @PathVariable("id") String productId) {
+    @PutMapping("/{id}")
+    public ProductDto update(@RequestBody ProductDto productDto, @ApiParam(name = "id", value = "Id of the product to be updated") @PathVariable("id") String productId) {
         Product product = productMapper.toProduct(productDto);
         product.setSku(productId);
-        service.update(product);
+        return productMapper.toProductDto(service.update(product));
     }
 
     @ApiOperation(value = "Retrieves the details of a product", notes = "This endpoint retrieves the details of a product from the database.", response = ProductDto.class)
