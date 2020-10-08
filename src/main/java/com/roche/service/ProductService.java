@@ -46,7 +46,11 @@ public class ProductService {
     }
 
     public Product get(String productId) {
-        return repository.findBySkuAndDeletedFalse(productId);
+        Product product = repository.findBySkuAndDeletedFalse(productId);
+        if (product != null) {
+            return product;
+        }
+        throw new EntityNotFoundException("Product with a given id does not exist");
     }
 
     public List<Product> getAll() {
