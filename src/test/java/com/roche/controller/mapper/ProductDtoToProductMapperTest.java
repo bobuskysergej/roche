@@ -33,7 +33,7 @@ public class ProductDtoToProductMapperTest {
         assertProducts(productDto, product);
     }
 
-    private void assertProducts(ProductDto productDto, Product product) {
+    public static void assertProducts(ProductDto productDto, Product product) {
         assertThat(productDto.getId()).isEqualTo(product.getSku());
         assertThat(productDto.getName()).isEqualTo(product.getName());
         assertThat(productDto.getPrice()).isEqualTo(product.getPrice());
