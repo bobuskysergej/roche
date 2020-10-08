@@ -33,5 +33,8 @@ public class Product {
     @Column
     @NonNull
     private Instant created;
+    @Column
+    @Builder.Default
+    private Boolean deleted = Boolean.FALSE;
 
 }

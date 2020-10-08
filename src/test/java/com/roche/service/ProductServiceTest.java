@@ -63,7 +63,7 @@ public class ProductServiceTest {
     public void get() {
         String productId = UUID.randomUUID().toString();
         service.get(productId);
-        verify(repository).getOne(productId);
+        verify(repository).findBySkuAndDeletedFalse(productId);
     }
 
     @Test

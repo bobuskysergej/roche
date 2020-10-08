@@ -18,26 +18,26 @@ public class ProductService {
     }
 
     public void create(Product product) {
-        this.repository.save(product);
+        repository.save(product);
     }
 
     public void update(Product product) {
-        this.repository.save(product);
+        repository.save(product);
     }
 
     public void delete(Product product) {
-        this.repository.delete(product);
+        repository.delete(product);
     }
 
     public void deleteById(String productId) {
-        this.repository.deleteById(productId);
+        repository.deleteById(productId);
     }
 
     public Product get(String productId) {
-        return this.repository.getOne(productId);
+        return repository.findBySkuAndDeletedFalse(productId);
     }
 
     public List<Product> getAll() {
-        return this.repository.findAll();
+        return repository.findAll();
     }
 }
