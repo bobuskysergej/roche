@@ -14,5 +14,5 @@ To launch the app run: `mvn spring-boot:run`
 The application will start locally on the port 8080. 
 
 Once application has booted up it's ready to process incoming http requests. To see what endpoints it exposes 
-navigate to:` http://localhost:8080//swagger-ui.html`
+navigate to: `http://localhost:8080//swagger-ui.html`
 
