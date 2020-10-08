@@ -29,8 +29,6 @@ public class ProductControllerTest {
     private ProductService service;
     @Captor
     private ArgumentCaptor<Product> productCaptor;
-    @Captor
-    private ArgumentCaptor<ProductDto> productDtoCaptor;
 
     private ProductDtoToProductMapper mapper;
     private ProductController controller;
