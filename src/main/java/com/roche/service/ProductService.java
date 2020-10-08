@@ -3,6 +3,7 @@ package com.roche.service;
 import com.roche.domain.Product;
 import com.roche.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class ProductService {
     }
 
     public void create(Product product) {
+        if(repository.findById(product.getSku()).isPresent()){
+            throw new DuplicateKeyException("Product with a given id already exists");
+        }
         repository.save(product);
     }
 
