@@ -4,8 +4,10 @@ import com.roche.domain.Product;
 import com.roche.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -19,13 +21,16 @@ public class ProductService {
     }
 
     public void create(Product product) {
-        if(repository.findById(product.getSku()).isPresent()){
+        if (repository.findById(product.getSku()).isPresent()) {
             throw new DuplicateKeyException("Product with a given id already exists");
         }
         repository.save(product);
     }
 
     public void update(Product product) {
+        if (!repository.findById(product.getSku()).isPresent()) {
+            throw new EntityNotFoundException("Product with a given id does not exist");
+        }
         repository.save(product);
     }
 
