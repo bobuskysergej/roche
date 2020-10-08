@@ -21,14 +21,14 @@ public class ProductService {
     }
 
     public void create(Product product) {
-        if (repository.findById(product.getSku()).isPresent()) {
+        if (repository.findBySkuAndDeletedFalse(product.getSku()) != null) {
             throw new DuplicateKeyException("Product with a given id already exists");
         }
         repository.save(product);
     }
 
     public void update(Product product) {
-        if (!repository.findById(product.getSku()).isPresent()) {
+        if (repository.findBySkuAndDeletedFalse(product.getSku()) == null) {
             throw new EntityNotFoundException("Product with a given id does not exist");
         }
         repository.save(product);

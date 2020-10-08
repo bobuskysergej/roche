@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.roche.TestUtility.mockProduct;
@@ -46,6 +47,7 @@ public class ProductServiceTest {
     @Test
     public void update() {
         Product product = mockProduct();
+        when(repository.findBySkuAndDeletedFalse(product.getSku())).thenReturn(product);
         service.update(product);
         verify(repository).save(product);
     }
@@ -71,6 +73,7 @@ public class ProductServiceTest {
     @Test
     public void get() {
         String productId = UUID.randomUUID().toString();
+        when(repository.findBySkuAndDeletedFalse(productId)).thenReturn(mockProduct());
         service.get(productId);
         verify(repository).findBySkuAndDeletedFalse(productId);
     }
