@@ -19,7 +19,6 @@ import static com.roche.TestUtility.mockProduct;
 import static com.roche.TestUtility.mockProductDto;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -73,6 +72,13 @@ public class ProductControllerTest {
         List<ProductDto> productDtos = controller.getAll();
         assertThat(productDtos).isNotEmpty();
         assertProducts(productDtos.get(0), product);
+    }
+
+    @Test
+    public void deleteById() {
+        Product product = mockProduct();
+        controller.deleteById(product.getSku());
+        verify(service).deleteById(product.getSku());
     }
 
     public static void assertProducts(ProductDto productDto, Product product) {
