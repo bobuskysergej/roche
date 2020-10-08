@@ -26,11 +26,14 @@ public class ProductService {
     }
 
     public void delete(Product product) {
-        repository.delete(product);
+        product.setDeleted(true);
+        repository.save(product);
     }
 
     public void deleteById(String productId) {
-        repository.deleteById(productId);
+        Product product = get(productId);
+        product.setDeleted(true);
+        repository.save(product);
     }
 
     public Product get(String productId) {
@@ -38,6 +41,6 @@ public class ProductService {
     }
 
     public List<Product> getAll() {
-        return repository.findAll();
+        return repository.findByDeletedFalse();
     }
 }
