@@ -1,6 +1,8 @@
 package com.roche.integration;
 
 import com.roche.controller.dto.ProductDto;
+import com.roche.repository.ProductRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 
 import static com.roche.TestUtility.mockProductDto;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,11 +32,19 @@ public class ProductControllerIntegrationTest {
     private URI productsUri;
 
     @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private TestRestTemplate template;
 
     @Before
     public void setUp() throws Exception {
         this.productsUri = new URL("http://localhost:" + port + "/products/").toURI();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        productRepository.deleteAll();
     }
 
     @Test
@@ -48,8 +59,7 @@ public class ProductControllerIntegrationTest {
     @Test
     public void updateProduct() {
         ProductDto productDto = mockProductDto();
-        ResponseEntity<Void> createResponse = template.postForEntity(productsUri, productDto, Void.class);
-        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        template.postForEntity(productsUri, productDto, Void.class);
         productDto.setName("updatedName-1");
         productDto.setPrice(10d);
         ResponseEntity<Void> updateResponse = template.postForEntity(productsUri + productDto.getId(), productDto, Void.class);
@@ -57,6 +67,27 @@ public class ProductControllerIntegrationTest {
         ResponseEntity<ProductDto> updatedProduct = template.getForEntity(productsUri + productDto.getId(), ProductDto.class);
         assertProducts(productDto, updatedProduct.getBody());
     }
+
+    @Test
+    public void findAll() {
+        ProductDto productDto = mockProductDto();
+        template.postForEntity(productsUri, productDto, Void.class);
+        ResponseEntity<List> allProductsResponse = template.getForEntity(productsUri, List.class);
+        List<ProductDto> productDtos = (List<ProductDto>) allProductsResponse.getBody();
+        assertThat(productDtos.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void deleteById() {
+        ProductDto productDto = mockProductDto();
+        template.postForEntity(productsUri, productDto, Void.class);
+        ResponseEntity<List> allProductsResponse = template.getForEntity(productsUri, List.class);
+        assertThat(allProductsResponse.getBody().size()).isEqualTo(1);
+        template.delete(productsUri + productDto.getId());
+        allProductsResponse = template.getForEntity(productsUri, List.class);
+        assertThat(allProductsResponse.getBody()).isEmpty();
+    }
+
 
     private void assertProducts(ProductDto productDto1, ProductDto productDto2) {
         assertThat(productDto1.getId()).isEqualTo(productDto2.getId());
