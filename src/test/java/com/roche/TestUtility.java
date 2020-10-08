@@ -1,5 +1,6 @@
 package com.roche;
 
+import com.roche.controller.dto.ProductDto;
 import com.roche.domain.Product;
 
 import java.time.Instant;
@@ -9,6 +10,15 @@ import java.util.UUID;
 public class TestUtility {
 
     private static Random random = new Random();
+
+    public static ProductDto mockProductDto() {
+        return ProductDto.builder()
+                .id(UUID.randomUUID().toString())
+                .name(randomName())
+                .created(Instant.now())
+                .price(randomPrice())
+                .build();
+    }
 
     public static Product mockProduct() {
         return Product.builder()

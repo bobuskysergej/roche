@@ -20,9 +20,16 @@ public class ProductDtoToProductMapperTest {
     }
 
     @Test
-    public void productMapping() {
+    public void toProductDtoMapping() {
         Product product = mockProduct();
         ProductDto productDto = mapper.toProductDto(product);
+        assertProducts(productDto, product);
+    }
+
+    @Test
+    public void toProductMapping() {
+        ProductDto productDto = TestUtility.mockProductDto();
+        Product product = mapper.toProduct(productDto);
         assertProducts(productDto, product);
     }
 
